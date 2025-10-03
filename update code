@@ -1,0 +1,47 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Bakery {
+
+    // Structure représentant un lot de pain
+    struct Batch {
+        uint256 flourUsed; // Quantité de farine utilisée pour ce lot (en kg par exemple)
+        uint256 quantityProduced; // Nombre de pains produits dans ce lot
+    }
+
+    // Liste des lots de pain
+    Batch[] public batches;
+
+    // Ajouter un lot de pain avec la quantité de farine utilisée et le nombre de pains produits
+    function addBatch(uint256 flourUsed, uint256 quantityProduced) public {
+        require(flourUsed > 0, "The flour quantity must be positive");
+
+        require(quantityProduced > 0, "the bread quantity must be positive");
+        
+        // Ajouter le lot à la liste des lots
+        batches.push(Batch(flourUsed, quantityProduced));
+    }
+
+    // Calculer la quantité moyenne de farine utilisée par pain
+    function averageFlourPerBread() public view returns (uint256) {
+        uint256 totalFlour = 0;
+        uint256 totalBreads = 0;
+        
+        // Calculer le total de farine utilisée et le nombre total de pains
+        for (uint256 i = 0; i < batches.length; i++) {
+            totalFlour += batches[i].flourUsed;
+            totalBreads += batches[i].quantityProduced;
+        }
+
+        // Eviter la division par zéro si aucun lot n'a été ajouté
+        require(totalBreads > 0, "No batch has been added");
+        
+        // Retourner la quantité moyenne de farine utilisée par pain
+        return totalFlour / totalBreads;
+    }
+
+    // Voir le nombre total de lots ajoutés
+    function getBatchCount() public view returns (uint256) {
+        return batches.length;
+    }
+}
